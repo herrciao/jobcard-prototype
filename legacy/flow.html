@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>產品流程表</title>
+    <link rel="stylesheet" href="flow.css">
+</head>
+<body>
+
+    <!-- 畫面一：產品列表 -->
+    <div id="listView" class="view">
+        <div class="list-header">
+            <h1 class="list-title">產品流程</h1>
+            <button id="addProductBtn" class="add-btn">+ 新增</button>
+        </div>
+        <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="搜尋圖號或品名…"
+            autocomplete="off"
+        >
+        <div id="productList" class="product-list">
+            <!-- 產品卡片動態插入 -->
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <p>還沒有產品</p>
+            <p class="empty-hint">點右上角「+ 新增」開始建立</p>
+        </div>
+    </div>
+
+    <!-- 畫面二：產品流程編輯 -->
+    <div id="editView" class="view" style="display:none;">
+        <div class="edit-header">
+            <button id="backBtn" class="back-btn">← 返回</button>
+            <button id="deleteProductBtn" class="delete-product-btn">刪除產品</button>
+        </div>
+
+        <!-- 產品資訊 -->
+        <div class="product-info">
+            <input
+                type="text"
+                id="editCompany"
+                class="info-input company-input"
+                placeholder="公司 / 客戶名"
+                autocomplete="off"
+            >
+            <input
+                type="text"
+                id="editPartNumber"
+                class="info-input part-input"
+                placeholder="圖號 + 品名"
+                autocomplete="off"
+            >
+            <input
+                type="text"
+                id="editMaterial"
+                class="info-input material-input"
+                placeholder="材質"
+                autocomplete="off"
+            >
+        </div>
+
+        <!-- 加工路線 -->
+        <div class="steps-section">
+            <div class="steps-label">加工路線</div>
+            <div id="stepsList" class="steps-list">
+                <!-- 步驟動態插入 -->
+            </div>
+            <button id="addStepBtn" class="add-step-btn">+ 加一步</button>
+        </div>
+
+        <!-- 備註 -->
+        <div class="notes-section">
+            <textarea
+                id="editNotes"
+                class="edit-notes"
+                placeholder="備註…"
+                rows="3"
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- 刪除確認 -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-box">
+            <p class="modal-text">確定要刪除這個產品？</p>
+            <div class="modal-actions">
+                <button id="confirmCancel" class="modal-btn cancel">取消</button>
+                <button id="confirmDelete" class="modal-btn delete">刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="flow.js"></script>
+</body>
+</html>

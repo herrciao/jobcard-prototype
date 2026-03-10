@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Job Card</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- Section 1: What is this -->
+        <div class="section header-section">
+            <input type="text" id="partName" class="field-title" placeholder="Part Name" autocomplete="off">
+            <div class="field-row">
+                <input type="text" id="machine" class="field-half" placeholder="Machine" autocomplete="off">
+                <input type="text" id="material" class="field-half" placeholder="Material" autocomplete="off">
+            </div>
+            <div class="field-row">
+                <input type="text" id="programId" class="field-half" placeholder="Program ID" autocomplete="off">
+                <input type="text" id="cycleTime" class="field-half" placeholder="Cycle Time" autocomplete="off">
+            </div>
+            <div class="field-date" id="dateDisplay"></div>
+        </div>
+
+        <!-- Section 2: Photos -->
+        <div class="section photo-section">
+            <div class="photos-container" id="photosContainer"></div>
+            <label for="photoInput" class="add-photo-btn">
+                <span class="plus-icon">+</span>
+                <span>Take Photo</span>
+            </label>
+            <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" multiple>
+        </div>
+
+        <!-- Section 3: Setup Info -->
+        <div class="section setup-section">
+            <div class="section-label">Setup</div>
+            <div class="setup-grid">
+                <div class="setup-item">
+                    <span class="setup-label">Main Collet</span>
+                    <input type="text" id="mainCollet" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Guide Bush</span>
+                    <input type="text" id="guideBush" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Sub Collet</span>
+                    <input type="text" id="subCollet" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Vibration Damper</span>
+                    <input type="text" id="antiVib" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Feeder Clamp</span>
+                    <input type="text" id="feederClamp" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Coolant</span>
+                    <input type="text" id="coolant" class="setup-input" autocomplete="off">
+                </div>
+                <div class="setup-item">
+                    <span class="setup-label">Ejector Bar Size</span>
+                    <input type="text" id="ejectBar" class="setup-input" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Tool List -->
+        <div class="section tools-section">
+            <div class="section-label">Tools</div>
+            <div id="toolsList" class="tools-list"></div>
+            <button id="addToolBtn" class="add-tool-btn">+ Add Tool</button>
+        </div>
+
+        <!-- Section 5: Notes / Warnings -->
+        <div class="section warning-section">
+            <div class="section-label warning-label">Warnings</div>
+            <textarea id="warnings" class="warning-textarea" placeholder="Potential issues, things to watch out for…" rows="5"></textarea>
+        </div>
+
+        <!-- Section 6: Video -->
+        <div class="section video-section">
+            <div id="videoPreview" class="video-preview" style="display:none;">
+                <video id="videoElement" controls playsinline></video>
+                <button class="media-delete" id="deleteVideo">×</button>
+            </div>
+            <label for="videoInput" class="add-video-btn" id="addVideoBtn">
+                <span>+ Record Video (optional)</span>
+            </label>
+            <input type="file" id="videoInput" accept="video/*" capture="environment" style="display:none;">
+        </div>
+
+        <!-- Section 7: Process Notes -->
+        <div class="section notes-section">
+            <textarea id="processNotes" class="notes-textarea" placeholder="Other notes…" rows="4"></textarea>
+        </div>
+
+    </div>
+
+    <!-- Photo Lightbox -->
+    <div id="photoModal" class="modal">
+        <span class="modal-close" id="closeModal">×</span>
+        <img id="modalImage" class="modal-img">
+    </div>
+
+    <script src="script-en.js"></script>
+</body>
+</html>

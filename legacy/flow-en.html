@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Product Flow Sheet</title>
+    <link rel="stylesheet" href="flow.css">
+</head>
+<body>
+
+    <!-- Screen 1: Product List -->
+    <div id="listView" class="view">
+        <div class="list-header">
+            <h1 class="list-title">Product Flow</h1>
+            <button id="addProductBtn" class="add-btn">+ New</button>
+        </div>
+        <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search by part number or name…"
+            autocomplete="off"
+        >
+        <div id="productList" class="product-list">
+            <!-- Product cards inserted dynamically -->
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <p>No products yet</p>
+            <p class="empty-hint">Tap "+ New" in the top right to get started</p>
+        </div>
+    </div>
+
+    <!-- Screen 2: Product Flow Editor -->
+    <div id="editView" class="view" style="display:none;">
+        <div class="edit-header">
+            <button id="backBtn" class="back-btn">← Back</button>
+            <button id="deleteProductBtn" class="delete-product-btn">Delete Product</button>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <input
+                type="text"
+                id="editCompany"
+                class="info-input company-input"
+                placeholder="Company / Customer"
+                autocomplete="off"
+            >
+            <input
+                type="text"
+                id="editPartNumber"
+                class="info-input part-input"
+                placeholder="Part Number + Name"
+                autocomplete="off"
+            >
+            <input
+                type="text"
+                id="editMaterial"
+                class="info-input material-input"
+                placeholder="Material"
+                autocomplete="off"
+            >
+        </div>
+
+        <!-- Process Route -->
+        <div class="steps-section">
+            <div class="steps-label">Process Route</div>
+            <div id="stepsList" class="steps-list">
+                <!-- Steps inserted dynamically -->
+            </div>
+            <button id="addStepBtn" class="add-step-btn">+ Add Step</button>
+        </div>
+
+        <!-- Notes -->
+        <div class="notes-section">
+            <textarea
+                id="editNotes"
+                class="edit-notes"
+                placeholder="Notes…"
+                rows="3"
+            ></textarea>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-box">
+            <p class="modal-text">Delete this product?</p>
+            <div class="modal-actions">
+                <button id="confirmCancel" class="modal-btn cancel">Cancel</button>
+                <button id="confirmDelete" class="modal-btn delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="flow-en.js"></script>
+</body>
+</html>

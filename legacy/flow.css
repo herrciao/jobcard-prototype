@@ -1,0 +1,457 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", Arial, sans-serif;
+    background: #fff;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.view {
+    min-height: 100vh;
+    padding: 16px;
+    padding-bottom: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== 產品列表畫面 ===== */
+
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.list-title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.add-btn {
+    padding: 8px 16px;
+    font-size: 15px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.add-btn:active {
+    background: #555;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    outline: none;
+    margin-bottom: 16px;
+    font-family: inherit;
+}
+
+.search-input:focus {
+    border-color: #999;
+    background: #fff;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+/* 產品卡片 */
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.product-card {
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.product-card:active {
+    background: #f8f8f8;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.card-company {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.card-route {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 空狀態 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+}
+
+.empty-state p {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* ===== 編輯畫面 ===== */
+
+.edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    padding: 8px 0;
+    font-size: 16px;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.back-btn:active {
+    color: #666;
+}
+
+.delete-product-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #c44;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.delete-product-btn:active {
+    background: #fff5f5;
+}
+
+/* 產品資訊 */
+.product-info {
+    margin-bottom: 24px;
+}
+
+.info-input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    background: transparent;
+    outline: none;
+    font-family: inherit;
+    color: #333;
+}
+
+.info-input:focus {
+    border-bottom-color: #999;
+}
+
+.info-input::placeholder {
+    color: #bbb;
+}
+
+.part-input {
+    font-size: 20px;
+    font-weight: 500;
+    border-bottom-width: 2px;
+    border-bottom-color: #ddd;
+    padding: 12px 0;
+}
+
+.part-input:focus {
+    border-bottom-color: #666;
+}
+
+/* 加工路線 */
+.steps-section {
+    margin-bottom: 24px;
+}
+
+.steps-label {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    position: relative;
+}
+
+.step-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #666;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.step-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+    padding: 10px 0;
+}
+
+.step-vendor {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 80px;
+    flex-shrink: 0;
+    padding: 4px 0;
+    font-family: inherit;
+}
+
+.step-vendor:focus {
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.step-vendor::placeholder {
+    color: #ccc;
+}
+
+.step-separator {
+    color: #ccc;
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
+.step-work {
+    font-size: 15px;
+    color: #333;
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    min-width: 0;
+    padding: 4px 0;
+    font-family: inherit;
+}
+
+.step-work:focus {
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.step-work::placeholder {
+    color: #ccc;
+}
+
+.step-delete {
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.step-delete:active {
+    color: #c44;
+}
+
+/* 步驟之間的連接線 */
+.step-connector {
+    width: 28px;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-connector .line {
+    width: 2px;
+    height: 8px;
+    background: #e0e0e0;
+}
+
+.add-step-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    font-size: 15px;
+    background: #fafafa;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    color: #888;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.add-step-btn:active {
+    background: #f0f0f0;
+}
+
+/* 備註 */
+.notes-section {
+    margin-bottom: 20px;
+}
+
+.edit-notes {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+    color: #333;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+}
+
+.edit-notes:focus {
+    border-color: #ccc;
+    background: #fff;
+}
+
+.edit-notes::placeholder {
+    color: #bbb;
+}
+
+/* ===== 確認彈窗 ===== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 0 24px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.modal-text {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.modal-btn.cancel {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.modal-btn.cancel:active {
+    background: #e0e0e0;
+}
+
+.modal-btn.delete {
+    background: #c44;
+    color: #fff;
+}
+
+.modal-btn.delete:active {
+    background: #a33;
+}
+
+/* ===== 響應式 ===== */
+
+@media screen and (max-width: 767px) {
+    input, textarea {
+        font-size: 16px;
+    }
+}
