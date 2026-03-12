@@ -1,49 +1,9 @@
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { resolveUserId } from '@/lib/resolve-user'
 import { NextResponse } from 'next/server'
 
 const MAX_JOB_CARDS = 10
-
-async function ensureProfile(db: ReturnType<typeof supabaseAdmin>, userId: string, email: string, name?: string | null, image?: string | null): Promise<{ ok: boolean; error?: string }> {
-  const { data: byId } = await db
-    .from('profiles')
-    .select('id')
-    .eq('id', userId)
-    .single()
-
-  if (byId) return { ok: true }
-
-  const { data: byEmail } = await db
-    .from('profiles')
-    .select('id')
-    .eq('email', email)
-    .single()
-
-  if (byEmail) {
-    const { error: updateErr } = await db
-      .from('profiles')
-      .update({ id: userId, name: name || null, image: image || null, updated_at: new Date().toISOString() })
-      .eq('email', email)
-    if (updateErr) {
-      return { ok: false, error: `update-by-email: ${updateErr.message} (${updateErr.code})` }
-    }
-    return { ok: true }
-  }
-
-  const { error } = await db.from('profiles').insert({
-    id: userId,
-    email,
-    name: name || null,
-    image: image || null,
-    role: 'user',
-    updated_at: new Date().toISOString(),
-  })
-
-  if (error) {
-    return { ok: false, error: `insert: ${error.message} (${error.code})` }
-  }
-  return { ok: true }
-}
 
 export async function GET() {
   const session = await auth()
@@ -52,15 +12,13 @@ export async function GET() {
   }
 
   const db = supabaseAdmin()
-  const getProfile = await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
-  if (!getProfile.ok) {
-    console.error('[GET] ensureProfile failed:', getProfile.error)
-  }
+  const profile = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  const uid = profile.userId
 
   const { data: cards, error } = await db
     .from('job_cards')
     .select('*, job_card_photos(id, url, public_id, created_at)')
-    .eq('user_id', session.user.id)
+    .eq('user_id', uid)
     .order('updated_at', { ascending: false })
 
   if (error) {
@@ -77,18 +35,19 @@ export async function POST(req: Request) {
   }
 
   const db = supabaseAdmin()
-  const profileResult = await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  const profileResult = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
   if (!profileResult.ok) {
     return NextResponse.json(
       { error: `Profile error: ${profileResult.error}` },
       { status: 500 }
     )
   }
+  const uid = profileResult.userId
 
   const { count } = await db
     .from('job_cards')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', session.user.id)
+    .eq('user_id', uid)
 
   if ((count ?? 0) >= MAX_JOB_CARDS) {
     return NextResponse.json(
@@ -101,7 +60,7 @@ export async function POST(req: Request) {
   const { data: card, error } = await db
     .from('job_cards')
     .insert({
-      user_id: session.user.id,
+      user_id: uid,
       module_type: body.module_type || 'lathe',
       part_name: body.part_name || '',
       machine: body.machine || '',
