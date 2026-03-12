@@ -77,9 +77,13 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   useEffect(() => { fetchCards() }, [fetchCards])
 
+  function formatDate(d: Date) {
+    return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
+  }
+
   function generateDefaultName() {
     const today = new Date()
-    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+    const dateStr = formatDate(today).replace(/\//g, '-')
     const todayCards = cards.filter(c => c.part_name.startsWith(dateStr))
     const nextNum = todayCards.length + 1
     return `${dateStr}-${String(nextNum).padStart(2, '0')}`
@@ -93,7 +97,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          date: new Date().toLocaleDateString('en-US'),
+          date: formatDate(new Date()),
           part_name: defaultName,
         }),
       })
@@ -265,7 +269,11 @@ export default function JobCardClient({ userId }: { userId: string }) {
               </div>
             ))}
           </div>
-          {current.date && <p className="text-xs text-gray-400">{current.date}</p>}
+          {current.date && (
+            <p className="text-xs text-gray-400">
+              {current.date} <span className="text-gray-300 ml-1">(YYYY/MM/DD)</span>
+            </p>
+          )}
         </div>
 
         {/* Photos */}
@@ -430,6 +438,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
                     {card.machine && `${card.machine} · `}{card.material || ''} {card.date && `· ${card.date}`}
+                    {!card.machine && !card.material && !card.date && <span className="text-gray-400">(YYYY/MM/DD)</span>}
                   </p>
                 </div>
                 {card.job_card_photos?.length > 0 && (
