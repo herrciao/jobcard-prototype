@@ -1,10 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const t = useTranslations('nav')
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
@@ -13,45 +16,46 @@ export default function Navbar() {
           JobCard
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Features</a>
-          <a href="#how-it-works" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
-          <a href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
-          <a href="#contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+          <a href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t('features')}</a>
+          <a href="#how-it-works" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t('howItWorks')}</a>
+          <a href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t('pricing')}</a>
+          <a href="#contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t('contact')}</a>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSwitcher />
           <Link href="/login" className="text-sm text-gray-700 hover:text-gray-900 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-            Log In
+            {t('login')}
           </Link>
           <Link href="/signup" className="text-sm bg-blue-700 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
-            Get Started
+            {t('getStarted')}
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 text-gray-600"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-5 h-0.5 bg-current mb-1" />
-          <div className="w-5 h-0.5 bg-current mb-1" />
-          <div className="w-5 h-0.5 bg-current" />
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            className="p-2 text-gray-600"
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 h-0.5 bg-current mb-1" />
+            <div className="w-5 h-0.5 bg-current mb-1" />
+            <div className="w-5 h-0.5 bg-current" />
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu */}
       {open && (
         <div className="md:hidden bg-white border-t border-gray-200 px-4 py-4 flex flex-col gap-4">
-          <a href="#features" className="text-sm text-gray-700" onClick={() => setOpen(false)}>Features</a>
-          <a href="#how-it-works" className="text-sm text-gray-700" onClick={() => setOpen(false)}>How It Works</a>
-          <a href="#pricing" className="text-sm text-gray-700" onClick={() => setOpen(false)}>Pricing</a>
-          <a href="#contact" className="text-sm text-gray-700" onClick={() => setOpen(false)}>Contact</a>
+          <a href="#features" className="text-sm text-gray-700" onClick={() => setOpen(false)}>{t('features')}</a>
+          <a href="#how-it-works" className="text-sm text-gray-700" onClick={() => setOpen(false)}>{t('howItWorks')}</a>
+          <a href="#pricing" className="text-sm text-gray-700" onClick={() => setOpen(false)}>{t('pricing')}</a>
+          <a href="#contact" className="text-sm text-gray-700" onClick={() => setOpen(false)}>{t('contact')}</a>
           <hr className="border-gray-200" />
-          <Link href="/login" className="text-sm text-gray-700 font-medium" onClick={() => setOpen(false)}>Log In</Link>
-          <Link href="/signup" className="text-sm bg-blue-700 text-white font-medium px-4 py-2 rounded-lg text-center" onClick={() => setOpen(false)}>Get Started</Link>
+          <Link href="/login" className="text-sm text-gray-700 font-medium" onClick={() => setOpen(false)}>{t('login')}</Link>
+          <Link href="/signup" className="text-sm bg-blue-700 text-white font-medium px-4 py-2 rounded-lg text-center" onClick={() => setOpen(false)}>{t('getStarted')}</Link>
         </div>
       )}
     </nav>

@@ -1,34 +1,21 @@
-const problems = [
-  {
-    icon: '📄',
-    title: 'Paper job cards get lost',
-    desc: 'Handwritten setup sheets disappear, get oil-stained, or are illegible by the next shift.',
-  },
-  {
-    icon: '🔁',
-    title: 'No setup history',
-    desc: 'Every time you run a part again, you start from scratch — because nothing was saved.',
-  },
-  {
-    icon: '📞',
-    title: 'Chasing information',
-    desc: 'Setters call each other trying to remember tooling or collet sizes from months ago.',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export default function Problem() {
+  const t = useTranslations('problem')
+
+  const problems = [
+    { icon: '📄', title: t('card1Title'), desc: t('card1Desc') },
+    { icon: '🔁', title: t('card2Title'), desc: t('card2Desc') },
+    { icon: '📞', title: t('card3Title'), desc: t('card3Desc') },
+  ]
+
   return (
     <section className="py-20 px-4 sm:px-6 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Sound familiar?
-          </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            CNC shops run on tribal knowledge. JobCard fixes that.
-          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{t('title')}</h2>
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">{t('subtitle')}</p>
         </div>
-
         <div className="grid sm:grid-cols-3 gap-6">
           {problems.map((p) => (
             <div key={p.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 
 interface Step {
   vendor: string
@@ -34,6 +35,8 @@ export default function FlowClient({ userId }: { userId: string }) {
   const [products, setProducts] = useState<Product[]>([])
   const [current, setCurrent] = useState<Product | null>(null)
   const [search, setSearch] = useState('')
+  const t = useTranslations('flow')
+  const tc = useTranslations('common')
 
   useEffect(() => {
     try {
@@ -86,16 +89,15 @@ export default function FlowClient({ userId }: { userId: string }) {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <button onClick={() => setCurrent(null)} className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-            ← Back
+            ← {tc('back')}
           </button>
           <button onClick={deleteProduct} className="text-sm text-red-500 hover:text-red-700 font-medium">
-            Delete Product
+            {t('deleteProduct')}
           </button>
         </div>
 
-        {/* Product info */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
-          {[{k:'company',p:'Company / Customer'},{k:'partNumber',p:'Part Number + Name'},{k:'material',p:'Material'}].map(({k,p}) => (
+          {[{k:'company',p:t('company')},{k:'partNumber',p:t('partNumber')},{k:'material',p:t('material')}].map(({k,p}) => (
             <input
               key={k}
               className="w-full text-sm text-gray-900 border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -106,9 +108,8 @@ export default function FlowClient({ userId }: { userId: string }) {
           ))}
         </div>
 
-        {/* Steps */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Process Route</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">{t('processRoute')}</h3>
           <div className="space-y-2">
             {current.steps.map((step, i) => (
               <div key={i}>
@@ -117,14 +118,14 @@ export default function FlowClient({ userId }: { userId: string }) {
                   <span className="w-6 h-6 bg-indigo-600 text-white text-xs font-bold rounded-full flex items-center justify-center shrink-0">{i+1}</span>
                   <input
                     className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 w-28 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
-                    placeholder="Vendor"
+                    placeholder={t('vendor')}
                     value={step.vendor}
                     onChange={e => updateCurrent({ ...current, steps: current.steps.map((s,idx) => idx===i ? {...s,vendor:e.target.value} : s) })}
                   />
                   <span className="text-gray-400 text-sm">—</span>
                   <input
                     className="flex-1 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white"
-                    placeholder="Work Content"
+                    placeholder={t('work')}
                     value={step.work}
                     onChange={e => updateCurrent({ ...current, steps: current.steps.map((s,idx) => idx===i ? {...s,work:e.target.value} : s) })}
                   />
@@ -140,21 +141,20 @@ export default function FlowClient({ userId }: { userId: string }) {
             onClick={() => updateCurrent({ ...current, steps: [...current.steps, { vendor: '', work: '' }] })}
             className="flex items-center gap-2 text-sm text-indigo-700 font-medium hover:text-indigo-800 mt-3"
           >
-            <span className="text-lg">+</span> Add Step
+            <span className="text-lg">+</span> {t('addStep')}
           </button>
         </div>
 
-        {/* Notes */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
           <textarea
             rows={3}
-            placeholder="Notes…"
+            placeholder={t('notesPlaceholder')}
             value={current.notes}
             onChange={e => updateCurrent({ ...current, notes: e.target.value })}
             className="w-full text-sm text-gray-900 outline-none resize-none placeholder-gray-400"
           />
         </div>
-        <p className="text-center text-xs text-gray-400 pb-4">Auto-saved locally</p>
+        <p className="text-center text-xs text-gray-400 pb-4">{t('autoSaved')}</p>
       </div>
     )
   }
@@ -162,15 +162,15 @@ export default function FlowClient({ userId }: { userId: string }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Product Flow</h2>
+        <h2 className="text-xl font-bold text-gray-900">{t('title')}</h2>
         <button onClick={addProduct} className="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors">
-          + New
+          + {tc('new')}
         </button>
       </div>
 
       <input
         type="text"
-        placeholder="Search by part number or company…"
+        placeholder={t('searchPlaceholder')}
         value={search}
         onChange={e => setSearch(e.target.value)}
         className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
@@ -179,7 +179,7 @@ export default function FlowClient({ userId }: { userId: string }) {
       {filtered.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <p className="text-4xl mb-3">🔍</p>
-          <p className="text-sm">{search ? 'No matching products found' : 'No products yet — tap + New to start'}</p>
+          <p className="text-sm">{search ? t('noMatch') : t('noProducts')}</p>
         </div>
       ) : (
         <div className="space-y-3">

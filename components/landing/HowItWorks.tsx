@@ -1,34 +1,21 @@
-const steps = [
-  {
-    number: '01',
-    title: 'Create an account',
-    desc: 'Sign up in 30 seconds with your email or Google account.',
-  },
-  {
-    number: '02',
-    title: 'Fill in your setup',
-    desc: 'Open a new Job Card on your phone, fill in tooling, parameters, and snap photos right on the shop floor.',
-  },
-  {
-    number: '03',
-    title: 'Access from anywhere',
-    desc: 'Your setup is saved to the cloud. Any team member can pull up the card on any device, any time.',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export default function HowItWorks() {
+  const t = useTranslations('howItWorks')
+
+  const steps = [
+    { number: '01', title: t('step1Title'), desc: t('step1Desc') },
+    { number: '02', title: t('step2Title'), desc: t('step2Desc') },
+    { number: '03', title: t('step3Title'), desc: t('step3Desc') },
+  ]
+
   return (
     <section id="how-it-works" className="py-20 px-4 sm:px-6 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Up and running in minutes
-          </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            No training required. If you can fill in a form, you can use JobCard.
-          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{t('title')}</h2>
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">{t('subtitle')}</p>
         </div>
-
         <div className="grid sm:grid-cols-3 gap-8">
           {steps.map((step, i) => (
             <div key={step.number} className="relative">

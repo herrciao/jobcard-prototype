@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-02-25.clover',
+  apiVersion: '2025-12-18.acacia' as Stripe.LatestApiVersion,
 })
 
 export async function createCheckoutSession({
@@ -23,6 +23,9 @@ export async function createCheckoutSession({
     customer_email: email,
     line_items: [{ price: priceId, quantity: 1 }],
     metadata: { userId },
+    subscription_data: {
+      metadata: { userId },
+    },
     success_url: successUrl,
     cancel_url: cancelUrl,
   })

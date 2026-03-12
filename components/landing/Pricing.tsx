@@ -1,67 +1,52 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-
-const plans = [
-  {
-    name: 'Free',
-    price: { monthly: 0, yearly: 0 },
-    desc: 'Perfect for trying JobCard.',
-    features: [
-      '1 active job card',
-      '1 product flow sheet',
-      'Photo & video capture',
-      'Mobile-optimized',
-      'Cloud save',
-    ],
-    cta: 'Get Started Free',
-    href: '/signup',
-    highlight: false,
-  },
-  {
-    name: 'Pro',
-    price: { monthly: 12, yearly: 99 },
-    desc: 'For shops that run daily.',
-    features: [
-      'Unlimited job cards',
-      'Unlimited product flows',
-      'Photo & video capture',
-      'Mobile-optimized',
-      'Cloud save',
-      'Team sharing (coming soon)',
-      'Export to PDF (coming soon)',
-    ],
-    cta: 'Start Pro Trial',
-    href: '/signup?plan=pro',
-    highlight: true,
-  },
-]
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 
 export default function Pricing() {
   const [yearly, setYearly] = useState(false)
+  const t = useTranslations('pricing')
+
+  const plans = [
+    {
+      name: t('freeName'),
+      price: { monthly: 0, yearly: 0 },
+      desc: t('freeDesc'),
+      features: [t('freeF1'), t('freeF2'), t('freeF3'), t('freeF4'), t('freeF5')],
+      cta: t('freeCta'),
+      href: '/signup' as const,
+      highlight: false,
+    },
+    {
+      name: t('proName'),
+      price: { monthly: 12, yearly: 99 },
+      desc: t('proDesc'),
+      features: [t('proF1'), t('proF2'), t('proF3'), t('proF4'), t('proF5'), t('proF6'), t('proF7')],
+      cta: t('proCta'),
+      href: '/signup?plan=pro' as const,
+      highlight: true,
+    },
+  ]
 
   return (
     <section id="pricing" className="py-20 px-4 sm:px-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Simple, honest pricing
-          </h2>
-          <p className="text-gray-500 text-lg mb-8">Start free. Upgrade when you&apos;re ready.</p>
-
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{t('title')}</h2>
+          <p className="text-gray-500 text-lg mb-8">{t('subtitle')}</p>
           <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full p-1">
             <button
               onClick={() => setYearly(false)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${!yearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}
             >
-              Monthly
+              {t('monthly')}
             </button>
             <button
               onClick={() => setYearly(true)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${yearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}
             >
-              Yearly <span className="text-green-600 font-semibold">–30%</span>
+              {t('yearly')} <span className="text-green-600 font-semibold">{t('yearlyDiscount')}</span>
             </button>
           </div>
         </div>
@@ -81,12 +66,11 @@ export default function Pricing() {
                 </span>
                 {plan.price.monthly > 0 && (
                   <span className={`text-sm mb-1.5 ${plan.highlight ? 'text-blue-200' : 'text-gray-400'}`}>
-                    /{yearly ? 'yr' : 'mo'}
+                    {yearly ? t('perYear') : t('perMonth')}
                   </span>
                 )}
               </div>
               <p className={`text-sm mb-6 ${plan.highlight ? 'text-blue-200' : 'text-gray-500'}`}>{plan.desc}</p>
-
               <ul className="space-y-2.5 mb-8">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm">
@@ -95,7 +79,6 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-
               <Link
                 href={plan.href}
                 className={`block text-center py-3 rounded-xl font-semibold text-sm transition-colors ${

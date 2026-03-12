@@ -1,33 +1,32 @@
-const features = [
-  {
-    tag: 'Job Card',
-    title: 'Digital Setup Sheet',
-    desc: 'Log part name, machine, material, program ID, cycle time, collets, guide bush, coolant, ejector bar, tooling table, warnings, photos, and video — all in one tap.',
-    highlights: ['Tool table with holder + insert', 'Photo & video capture', 'Setup parameters grid', 'Auto-saved to cloud'],
-    color: 'blue',
-  },
-  {
-    tag: 'Product Flow',
-    title: 'Process Route Sheet',
-    desc: 'Track where each part goes after your machine. Map out every vendor, subcontractor, and process step in a clear visual route.',
-    highlights: ['Visual step-by-step route', 'Vendor per step', 'Multi-customer support', 'Instant search by part no.'],
-    color: 'indigo',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export default function Features() {
+  const t = useTranslations('features')
+
+  const features = [
+    {
+      tag: t('jobcardTag'),
+      title: t('jobcardTitle'),
+      desc: t('jobcardDesc'),
+      highlights: [t('jobcardH1'), t('jobcardH2'), t('jobcardH3'), t('jobcardH4')],
+      color: 'blue' as const,
+    },
+    {
+      tag: t('flowTag'),
+      title: t('flowTitle'),
+      desc: t('flowDesc'),
+      highlights: [t('flowH1'), t('flowH2'), t('flowH3'), t('flowH4')],
+      color: 'indigo' as const,
+    },
+  ]
+
   return (
     <section id="features" className="py-20 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Two tools. One workflow.
-          </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Everything a CNC setter needs to document a setup and track a part.
-          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{t('title')}</h2>
+          <p className="text-gray-500 text-lg max-w-xl mx-auto">{t('subtitle')}</p>
         </div>
-
         <div className="grid md:grid-cols-2 gap-8">
           {features.map((f) => (
             <div key={f.tag} className={`rounded-2xl p-8 border ${f.color === 'blue' ? 'border-blue-100 bg-blue-50' : 'border-indigo-100 bg-indigo-50'}`}>
