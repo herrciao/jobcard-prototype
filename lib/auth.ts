@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
-import Resend from 'next-auth/providers/resend'
 import { supabaseAdmin } from './supabase'
 
 const ADMIN_EMAIL = 'info@elixirfab.com'
@@ -10,10 +9,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
-    Resend({
-      apiKey: process.env.RESEND_API_KEY,
-      from: 'CNCLog <noreply@cnclog.app>',
     }),
   ],
   callbacks: {
