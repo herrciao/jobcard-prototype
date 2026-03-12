@@ -4,32 +4,45 @@ import { NextResponse } from 'next/server'
 
 const MAX_JOB_CARDS = 10
 
-async function ensureProfile(db: ReturnType<typeof supabaseAdmin>, userId: string, email: string, name?: string | null, image?: string | null): Promise<boolean> {
-  const { data: existing } = await db
+async function ensureProfile(db: ReturnType<typeof supabaseAdmin>, userId: string, email: string, name?: string | null, image?: string | null): Promise<{ ok: boolean; error?: string }> {
+  const { data: byId } = await db
     .from('profiles')
     .select('id')
     .eq('id', userId)
     .single()
 
-  if (existing) return true
+  if (byId) return { ok: true }
 
-  const { error } = await db.from('profiles').upsert(
-    {
-      id: userId,
-      email,
-      name: name || null,
-      image: image || null,
-      role: 'user',
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'id', ignoreDuplicates: false }
-  )
+  const { data: byEmail } = await db
+    .from('profiles')
+    .select('id')
+    .eq('email', email)
+    .single()
+
+  if (byEmail) {
+    const { error: updateErr } = await db
+      .from('profiles')
+      .update({ id: userId, name: name || null, image: image || null, updated_at: new Date().toISOString() })
+      .eq('email', email)
+    if (updateErr) {
+      return { ok: false, error: `update-by-email: ${updateErr.message} (${updateErr.code})` }
+    }
+    return { ok: true }
+  }
+
+  const { error } = await db.from('profiles').insert({
+    id: userId,
+    email,
+    name: name || null,
+    image: image || null,
+    role: 'user',
+    updated_at: new Date().toISOString(),
+  })
 
   if (error) {
-    console.error('[ensureProfile] upsert failed:', error.message, error.details, error.code)
-    return false
+    return { ok: false, error: `insert: ${error.message} (${error.code})` }
   }
-  return true
+  return { ok: true }
 }
 
 export async function GET() {
@@ -39,7 +52,10 @@ export async function GET() {
   }
 
   const db = supabaseAdmin()
-  await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  const getProfile = await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  if (!getProfile.ok) {
+    console.error('[GET] ensureProfile failed:', getProfile.error)
+  }
 
   const { data: cards, error } = await db
     .from('job_cards')
@@ -61,9 +77,12 @@ export async function POST(req: Request) {
   }
 
   const db = supabaseAdmin()
-  const profileOk = await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
-  if (!profileOk) {
-    return NextResponse.json({ error: 'Failed to create user profile. Please try logging out and back in.' }, { status: 500 })
+  const profileResult = await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  if (!profileResult.ok) {
+    return NextResponse.json(
+      { error: `Profile error: ${profileResult.error}` },
+      { status: 500 }
+    )
   }
 
   const { count } = await db
