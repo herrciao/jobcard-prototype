@@ -14,18 +14,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user }) {
       if (!user.id || !user.email) return true
-      const db = supabaseAdmin()
-      await db.from('profiles').upsert(
-        {
-          id: user.id,
-          email: user.email,
-          name: user.name || null,
-          image: user.image || null,
-          role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'id', ignoreDuplicates: false }
-      )
+      try {
+        const db = supabaseAdmin()
+        const { error } = await db.from('profiles').upsert(
+          {
+            id: user.id,
+            email: user.email,
+            name: user.name || null,
+            image: user.image || null,
+            role: user.email === ADMIN_EMAIL ? 'admin' : 'user',
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'id', ignoreDuplicates: false }
+        )
+        if (error) {
+          console.error('[signIn] profile upsert failed:', error.message, error.details, error.code)
+        }
+      } catch (e) {
+        console.error('[signIn] unexpected error:', e)
+      }
       return true
     },
     session({ session, token }) {
