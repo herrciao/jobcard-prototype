@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
     Resend({
       apiKey: process.env.RESEND_API_KEY,
-      from: 'JobCard <noreply@jobcard.app>',
+      from: 'CNCLog <noreply@cnclog.app>',
     }),
   ],
   callbacks: {

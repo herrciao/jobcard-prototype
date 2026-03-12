@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "JobCard",
+    "appName": "CNCLog",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -28,7 +28,7 @@
   "hero": {
     "badge": "Built for CNC Shops",
     "titleLine1": "Ditch the Paper.",
-    "titleLine2": "Go Digital with JobCard.",
+    "titleLine2": "Go Digital with CNCLog.",
     "description": "A mobile-first digital job card for CNC setters. Log tooling, setup parameters, process routes, and photos — fast, from your phone, on the shop floor.",
     "ctaStart": "Start Free Trial",
     "ctaFeatures": "See How It Works",
@@ -42,7 +42,7 @@
   },
   "problem": {
     "title": "Sound familiar?",
-    "subtitle": "CNC shops run on tribal knowledge. JobCard fixes that.",
+    "subtitle": "CNC shops run on tribal knowledge. CNCLog fixes that.",
     "card1Title": "Paper job cards get lost",
     "card1Desc": "Handwritten setup sheets disappear, get oil-stained, or are illegible by the next shift.",
     "card2Title": "No setup history",
@@ -70,7 +70,7 @@
   },
   "howItWorks": {
     "title": "Up and running in minutes",
-    "subtitle": "No training required. If you can fill in a form, you can use JobCard.",
+    "subtitle": "No training required. If you can fill in a form, you can use CNCLog.",
     "step1Title": "Create an account",
     "step1Desc": "Sign up in 30 seconds with your email or Google account.",
     "step2Title": "Fill in your setup",
@@ -88,7 +88,7 @@
     "perYear": "/yr",
     "freeName": "FREE",
     "freePrice": "0",
-    "freeDesc": "Perfect for trying JobCard.",
+    "freeDesc": "Perfect for trying CNCLog.",
     "freeF1": "Up to 10 job cards",
     "freeF2": "1 product flow sheet",
     "freeF3": "Photo capture (5 per card)",
@@ -108,7 +108,7 @@
   },
   "contact": {
     "title": "Get in touch",
-    "subtitle": "Questions about JobCard? Want a demo for your shop? We'd love to hear from you.",
+    "subtitle": "Questions about CNCLog? Want a demo for your shop? We'd love to hear from you.",
     "nameLabel": "Name",
     "namePlaceholder": "Your name",
     "emailLabel": "Email",
@@ -125,7 +125,7 @@
     "description": "Digital setup sheets built for CNC shops. Fast, mobile-first, and always with you on the floor.",
     "product": "Product",
     "company": "Company",
-    "copyright": "© {year} JobCard. All rights reserved.",
+    "copyright": "© {year} CNCLog. All rights reserved.",
     "tagline": "Built for the shop floor.",
     "privacy": "Privacy Policy",
     "gdpr": "Your data is protected under GDPR standards. We never share your job card data with third parties."

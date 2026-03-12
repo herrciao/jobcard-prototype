@@ -14,7 +14,7 @@ export default async function SignupPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-blue-700">JobCard</Link>
+          <Link href="/" className="text-2xl font-bold text-blue-700">CNCLog</Link>
           <h1 className="text-xl font-semibold text-gray-900 mt-4">{t('title')}</h1>
           <p className="text-gray-500 text-sm mt-1">{t('subtitle')}</p>
         </div>

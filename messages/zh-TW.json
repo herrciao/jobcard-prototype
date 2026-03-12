@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "JobCard",
+    "appName": "改車手札",
     "save": "儲存",
     "cancel": "取消",
     "delete": "刪除",
@@ -28,7 +28,7 @@
   "hero": {
     "badge": "專為 CNC 車間打造",
     "titleLine1": "告別紙本改車單。",
-    "titleLine2": "用 JobCard 數位化。",
+    "titleLine2": "用 改車手札 數位化。",
     "description": "專為 CNC 調機師設計的行動優先數位改車單。快速記錄刀具、設定參數、製程路線和照片——在現場用手機就能完成。",
     "ctaStart": "免費開始使用",
     "ctaFeatures": "了解功能",
@@ -42,7 +42,7 @@
   },
   "problem": {
     "title": "聽起來很熟悉？",
-    "subtitle": "CNC 車間靠的是口耳相傳的經驗。JobCard 幫你改變這一切。",
+    "subtitle": "CNC 車間靠的是口耳相傳的經驗。改車手札 幫你改變這一切。",
     "card1Title": "紙本改車單容易遺失",
     "card1Desc": "手寫的設定表不見了、沾到油、或是到下一班已經看不清楚。",
     "card2Title": "沒有設定歷史紀錄",
@@ -70,7 +70,7 @@
   },
   "howItWorks": {
     "title": "幾分鐘就能上手",
-    "subtitle": "不需要培訓。會填表就會用 JobCard。",
+    "subtitle": "不需要培訓。會填表就會用 改車手札。",
     "step1Title": "建立帳號",
     "step1Desc": "用 Email 或 Google 帳號 30 秒完成註冊。",
     "step2Title": "填寫你的設定",
@@ -88,7 +88,7 @@
     "perYear": "/年",
     "freeName": "FREE",
     "freePrice": "0",
-    "freeDesc": "適合試用 JobCard。",
+    "freeDesc": "適合試用 改車手札。",
     "freeF1": "最多 10 組改車單",
     "freeF2": "1 組製程路線表",
     "freeF3": "照片拍攝（每組 5 張）",
@@ -108,7 +108,7 @@
   },
   "contact": {
     "title": "聯絡我們",
-    "subtitle": "對 JobCard 有問題？想為你的車間安排示範？歡迎聯繫我們。",
+    "subtitle": "對 改車手札 有問題？想為你的車間安排示範？歡迎聯繫我們。",
     "nameLabel": "姓名",
     "namePlaceholder": "你的名字",
     "emailLabel": "Email",
@@ -125,7 +125,7 @@
     "description": "專為 CNC 車間打造的數位改車單。快速、行動優先，隨時陪你在現場。",
     "product": "產品",
     "company": "公司",
-    "copyright": "© {year} JobCard. 版權所有。",
+    "copyright": "© {year} 改車手札. 版權所有。",
     "tagline": "專為現場打造。",
     "privacy": "隱私政策",
     "gdpr": "您的資料安全受 GDPR 標準保護。我們絕不會向第三方分享您的改車單資料。"

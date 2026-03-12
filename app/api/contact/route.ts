@@ -12,10 +12,10 @@ export async function POST(req: Request) {
 
   try {
     await resend.emails.send({
-      from: 'JobCard Contact <noreply@jobcard.app>',
+      from: 'CNCLog Contact <noreply@cnclog.app>',
       to: process.env.CONTACT_EMAIL!,
       replyTo: email,
-      subject: `JobCard contact from ${name}`,
+      subject: `CNCLog contact from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
     })
     return NextResponse.json({ ok: true })

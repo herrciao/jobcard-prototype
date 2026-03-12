@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid sm:grid-cols-3 gap-8 mb-8">
           <div>
             <Link href="/" className="text-white text-xl font-bold tracking-tight">
-              JobCard
+              CNCLog
             </Link>
             <p className="text-sm mt-3 leading-relaxed">{t('description')}</p>
             <p className="text-xs mt-3 text-gray-500 leading-relaxed">{t('gdpr')}</p>

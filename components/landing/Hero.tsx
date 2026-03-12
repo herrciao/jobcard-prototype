@@ -41,7 +41,7 @@ export default function Hero() {
         <div className="mt-16 mx-auto max-w-sm bg-gray-900 rounded-3xl p-3 shadow-2xl">
           <div className="bg-gray-800 rounded-2xl overflow-hidden">
             <div className="bg-gray-700 px-4 py-3 flex items-center justify-between">
-              <span className="text-white text-sm font-medium">Job Card</span>
+              <span className="text-white text-sm font-medium">CNCLog</span>
               <span className="text-gray-400 text-xs">{t('mockSaved')}</span>
             </div>
             <div className="p-4 space-y-3">
