@@ -211,6 +211,7 @@
     "deleteConfirm": "確定要刪除這張改車單嗎？此操作無法復原。",
     "limitReached": "已達上限（10 組），請刪除舊的改車單後再新增。",
     "noCards": "還沒有改車單——點擊「新增」開始",
+    "createError": "無法建立改車單",
     "lastUpdated": "最後更新",
     "uploadingPhoto": "上傳照片中…"
   },

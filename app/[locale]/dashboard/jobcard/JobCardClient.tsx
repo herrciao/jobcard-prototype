@@ -70,16 +70,23 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   async function createCard() {
     if (cards.length >= 10) return
-    const res = await fetch('/api/jobcards', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date: new Date().toLocaleDateString('en-US') }),
-    })
-    if (res.ok) {
-      const { card } = await res.json()
-      card.job_card_photos = []
-      setCards([card, ...cards])
-      setCurrent(card)
+    try {
+      const res = await fetch('/api/jobcards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: new Date().toLocaleDateString('en-US') }),
+      })
+      if (res.ok) {
+        const { card } = await res.json()
+        card.job_card_photos = []
+        setCards([card, ...cards])
+        setCurrent(card)
+      } else {
+        const err = await res.json().catch(() => ({}))
+        alert(`${t('createError') || 'Failed to create card'}: ${err.error || res.status}`)
+      }
+    } catch (e) {
+      alert(`${t('createError') || 'Network error'}: ${e}`)
     }
   }
 
