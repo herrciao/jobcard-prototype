@@ -77,13 +77,25 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   useEffect(() => { fetchCards() }, [fetchCards])
 
+  function generateDefaultName() {
+    const today = new Date()
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+    const todayCards = cards.filter(c => c.part_name.startsWith(dateStr))
+    const nextNum = todayCards.length + 1
+    return `${dateStr}-${String(nextNum).padStart(2, '0')}`
+  }
+
   async function createCard() {
     if (cards.length >= 10) return
+    const defaultName = generateDefaultName()
     try {
       const res = await fetch('/api/jobcards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: new Date().toLocaleDateString('en-US') }),
+        body: JSON.stringify({
+          date: new Date().toLocaleDateString('en-US'),
+          part_name: defaultName,
+        }),
       })
       if (res.ok) {
         const { card } = await res.json()
