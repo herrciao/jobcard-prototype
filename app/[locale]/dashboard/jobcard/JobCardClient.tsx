@@ -276,26 +276,30 @@ export default function JobCardClient({ userId }: { userId: string }) {
             ))}
           </div>
           {photos.length < 5 ? (
-            <CldUploadWidget
-              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'jobcard_unsigned'}
-              options={{
-                maxFiles: 5 - photos.length,
-                sources: ['local', 'camera'],
-                resourceType: 'image',
-                maxFileSize: 5000000,
-                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
-              }}
-              onSuccess={onPhotoUpload}
-            >
-              {({ open }) => (
-                <button
-                  onClick={() => open()}
-                  className="flex items-center gap-2 text-sm text-blue-700 font-medium hover:text-blue-800"
-                >
-                  <span className="text-lg">+</span> {t('addPhoto')}
-                </button>
-              )}
-            </CldUploadWidget>
+            process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+              <CldUploadWidget
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'jobcard_unsigned'}
+                options={{
+                  maxFiles: 5 - photos.length,
+                  sources: ['local', 'camera'],
+                  resourceType: 'image',
+                  maxFileSize: 5000000,
+                  clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+                }}
+                onSuccess={onPhotoUpload}
+              >
+                {({ open }) => (
+                  <button
+                    onClick={() => open()}
+                    className="flex items-center gap-2 text-sm text-blue-700 font-medium hover:text-blue-800"
+                  >
+                    <span className="text-lg">+</span> {t('addPhoto')}
+                  </button>
+                )}
+              </CldUploadWidget>
+            ) : (
+              <p className="text-xs text-gray-400">{t('addPhoto')} (配置中…)</p>
+            )
           ) : (
             <p className="text-xs text-gray-400">{t('photoLimitReached')}</p>
           )}
