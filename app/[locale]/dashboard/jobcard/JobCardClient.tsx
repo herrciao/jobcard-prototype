@@ -61,7 +61,16 @@ export default function JobCardClient({ userId }: { userId: string }) {
     const res = await fetch('/api/jobcards')
     if (res.ok) {
       const data = await res.json()
-      setCards(data.cards || [])
+      const safeCards = (data.cards || []).map((c: JobCard) => ({
+        ...c,
+        setup_data: c.setup_data || EMPTY_SETUP,
+        tools_data: c.tools_data || [],
+        warnings: c.warnings || '',
+        notes: c.notes || '',
+        part_name: c.part_name || '',
+        job_card_photos: c.job_card_photos || [],
+      }))
+      setCards(safeCards)
     }
     setLoading(false)
   }, [])
@@ -78,9 +87,21 @@ export default function JobCardClient({ userId }: { userId: string }) {
       })
       if (res.ok) {
         const { card } = await res.json()
-        card.job_card_photos = []
-        setCards([card, ...cards])
-        setCurrent(card)
+        const safeCard = {
+          ...card,
+          setup_data: card.setup_data || EMPTY_SETUP,
+          tools_data: card.tools_data || [],
+          warnings: card.warnings || '',
+          notes: card.notes || '',
+          part_name: card.part_name || '',
+          machine: card.machine || '',
+          material: card.material || '',
+          program_id: card.program_id || '',
+          cycle_time: card.cycle_time || '',
+          job_card_photos: [],
+        }
+        setCards([safeCard, ...cards])
+        setCurrent(safeCard)
       } else {
         const err = await res.json().catch(() => ({}))
         alert(`${t('createError') || 'Failed to create card'}: ${err.error || res.status}`)
@@ -186,8 +207,9 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   // Detail view
   if (current) {
-    const setup = current.setup_data || EMPTY_SETUP
-    const photos = current.job_card_photos || []
+    const setup = current.setup_data && typeof current.setup_data === 'object' ? current.setup_data : EMPTY_SETUP
+    const photos = Array.isArray(current.job_card_photos) ? current.job_card_photos : []
+    const tools = Array.isArray(current.tools_data) ? current.tools_data : []
 
     return (
       <div className="space-y-4">
@@ -301,14 +323,14 @@ export default function JobCardClient({ userId }: { userId: string }) {
         {/* Tools */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4">
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">{t('tools')}</h3>
-          {current.tools_data.length > 0 && (
+          {tools.length > 0 && (
             <div className="grid grid-cols-[60px_1fr_1fr_28px] gap-1.5 mb-2">
               {[t('toolNumber'), t('holder'), t('insert'), ''].map(h => (
                 <span key={h} className="text-xs text-gray-400 font-medium px-1">{h}</span>
               ))}
             </div>
           )}
-          {current.tools_data.map((tool, i) => (
+          {tools.map((tool, i) => (
             <div key={i} className="grid grid-cols-[60px_1fr_1fr_28px] gap-1.5 mb-2">
               <input className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="T01" value={tool.number} onChange={e => updateTool(i, 'number', e.target.value)} />
               <input className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder={t('holder')} value={tool.holder} onChange={e => updateTool(i, 'holder', e.target.value)} />
