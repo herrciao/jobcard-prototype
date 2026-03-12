@@ -1,6 +1,6 @@
 # CNCLog (改車手札)
 
-Digital setup sheets for CNC shops. Mobile-first, cloud-saved, multilingual (EN / 繁體中文).
+Digital setup sheets for CNC Gurus. Mobile-first, cloud-saved, multilingual (EN / 繁體中文).
 
 ## Features
 

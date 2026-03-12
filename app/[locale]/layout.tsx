@@ -10,11 +10,11 @@ import '../globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'CNCLog – Digital Setup Sheets for CNC Shops',
+  title: 'CNCLog – Digital Setup Sheets for CNC Gurus',
   description:
     'Replace paper job cards with a fast, mobile-first digital tool. Track setups, tooling, and process routes — all in one place.',
   openGraph: {
-    title: 'CNCLog – Digital Setup Sheets for CNC Shops',
+    title: 'CNCLog – Digital Setup Sheets for CNC Gurus',
     description: 'Replace paper job cards with a fast, mobile-first digital tool.',
     type: 'website',
   },

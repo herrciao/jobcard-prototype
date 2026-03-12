@@ -26,10 +26,10 @@
     "getStarted": "Get Started"
   },
   "hero": {
-    "badge": "Built for CNC Shops",
+    "badge": "Built for CNC Gurus",
     "titleLine1": "Ditch the Paper.",
     "titleLine2": "Go Digital with CNCLog.",
-    "description": "A mobile-first digital job card for CNC setters. Log tooling, setup parameters, process routes, and photos — fast, from your phone, on the shop floor.",
+    "description": "A mobile-first digital job card for CNC Gurus. Log tooling, setup parameters, process routes, and photos — fast, from your phone, on the shop floor.",
     "ctaStart": "Start Free Trial",
     "ctaFeatures": "See How It Works",
     "noCreditCard": "No credit card required for free plan.",
@@ -48,11 +48,11 @@
     "card2Title": "No setup history",
     "card2Desc": "Every time you run a part again, you start from scratch — because nothing was saved.",
     "card3Title": "Chasing information",
-    "card3Desc": "Setters call each other trying to remember tooling or collet sizes from months ago."
+    "card3Desc": "Gurus call each other trying to remember tooling or collet sizes from months ago."
   },
   "features": {
     "title": "Two tools. One workflow.",
-    "subtitle": "Everything a CNC setter needs to document a setup and track a part.",
+    "subtitle": "Everything a CNC Guru needs to document a setup and track a part.",
     "jobcardTag": "Job Card",
     "jobcardTitle": "Digital Setup Sheet",
     "jobcardDesc": "Log part name, machine, material, program ID, cycle time, collets, guide bush, coolant, ejector bar, tooling table, warnings, photos — all in one tap.",
