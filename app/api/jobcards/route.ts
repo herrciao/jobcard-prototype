@@ -4,13 +4,13 @@ import { NextResponse } from 'next/server'
 
 const MAX_JOB_CARDS = 10
 
-async function ensureProfile(db: ReturnType<typeof supabaseAdmin>, session: { user: { id: string; email?: string | null; name?: string | null; image?: string | null } }) {
+async function ensureProfile(db: ReturnType<typeof supabaseAdmin>, userId: string, email: string, name?: string | null, image?: string | null) {
   await db.from('profiles').upsert(
     {
-      id: session.user.id,
-      email: session.user.email || '',
-      name: session.user.name || null,
-      image: session.user.image || null,
+      id: userId,
+      email,
+      name: name || null,
+      image: image || null,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'id', ignoreDuplicates: true }
@@ -24,7 +24,7 @@ export async function GET() {
   }
 
   const db = supabaseAdmin()
-  await ensureProfile(db, session)
+  await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
 
   const { data: cards, error } = await db
     .from('job_cards')
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   const db = supabaseAdmin()
-  await ensureProfile(db, session)
+  await ensureProfile(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
 
   const { count } = await db
     .from('job_cards')
