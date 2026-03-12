@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
 import UpgradeBanner from './UpgradeBanner'
+import SignOutButton from '@/components/SignOutButton'
 
 export default async function DashboardPage({
   searchParams,
@@ -43,11 +44,7 @@ export default async function DashboardPage({
                 Admin
               </Link>
             )}
-            <form action="/api/auth/signout" method="POST">
-              <button type="submit" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                {tc('signOut')}
-              </button>
-            </form>
+            <SignOutButton />
           </div>
         </div>
       </div>
