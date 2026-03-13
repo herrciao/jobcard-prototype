@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { CldUploadWidget } from 'next-cloudinary'
 import type { CloudinaryUploadWidgetResults } from 'next-cloudinary'
 
@@ -49,6 +50,7 @@ const EMPTY_SETUP = {
 export default function JobCardClient({ userId }: { userId: string }) {
   const t = useTranslations('jobcard')
   const tc = useTranslations('common')
+  const router = useRouter()
 
   const [cards, setCards] = useState<JobCard[]>([])
   const [current, setCurrent] = useState<JobCard | null>(null)
@@ -292,14 +294,18 @@ export default function JobCardClient({ userId }: { userId: string }) {
     const tools = Array.isArray(current.tools_data) ? current.tools_data : []
 
     return (
-      <div className="space-y-4">
-        {/* Breadcrumb: 改車單列表 / card name */}
-        <div className="flex items-center gap-2 text-sm">
+      <>
+      {/* Nav header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-2 text-sm">
+          <button onClick={() => router.push('/dashboard')} className="text-gray-500 hover:text-gray-700">{t('backToDashboard').replace('← ', '')}</button>
+          <span className="text-gray-300">/</span>
           <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">{t('title')}</button>
           <span className="text-gray-300">/</span>
-          <span className="text-gray-900 font-medium truncate">{current.part_name || t('partName')}</span>
+          <span className="font-medium text-gray-900 truncate max-w-[200px]">{current.part_name || t('partName')}</span>
         </div>
-
+      </div>
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
@@ -500,12 +506,21 @@ export default function JobCardClient({ userId }: { userId: string }) {
           </div>
         )}
       </div>
+      </>
     )
   }
 
   // List view
   return (
-    <div className="space-y-4">
+    <>
+    <div className="bg-white border-b border-gray-200">
+      <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-2 text-sm">
+        <button onClick={() => router.push('/dashboard')} className="text-gray-500 hover:text-gray-700">{t('backToDashboard').replace('← ', '')}</button>
+        <span className="text-gray-300">/</span>
+        <span className="font-medium text-gray-900">{t('title')}</span>
+      </div>
+    </div>
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900">{t('title')}</h2>
         {cards.length < 10 ? (
@@ -553,5 +568,6 @@ export default function JobCardClient({ userId }: { userId: string }) {
         </div>
       )}
     </div>
+    </>
   )
 }
