@@ -182,6 +182,7 @@
     "backToDashboard": "← Dashboard",
     "newCard": "New Job Card",
     "partName": "Part Name",
+    "partNameHint": "This is the card name — edit it to something recognizable",
     "machine": "Machine",
     "material": "Material",
     "programId": "Program ID",

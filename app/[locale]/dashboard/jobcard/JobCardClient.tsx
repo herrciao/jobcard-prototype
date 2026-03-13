@@ -113,8 +113,13 @@ export default function JobCardClient({ userId }: { userId: string }) {
     const today = new Date()
     const dateStr = formatDate(today).replace(/\//g, '-')
     const todayCards = cards.filter(c => c.part_name.startsWith(dateStr))
-    const nextNum = todayCards.length + 1
-    return `${dateStr}-${String(nextNum).padStart(2, '0')}`
+    let maxNum = 0
+    for (const c of todayCards) {
+      const suffix = c.part_name.slice(dateStr.length + 1)
+      const num = parseInt(suffix, 10)
+      if (!isNaN(num) && num > maxNum) maxNum = num
+    }
+    return `${dateStr}-${String(maxNum + 1).padStart(2, '0')}`
   }
 
   async function createCard() {
@@ -288,6 +293,13 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
     return (
       <div className="space-y-4">
+        {/* Breadcrumb: 改車單列表 / card name */}
+        <div className="flex items-center gap-2 text-sm">
+          <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">{t('title')}</button>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-900 font-medium truncate">{current.part_name || t('partName')}</span>
+        </div>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
@@ -316,12 +328,15 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
         {/* Header info */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
-          <input
-            className="w-full text-xl font-bold text-gray-900 placeholder-gray-300 outline-none border-b border-gray-100 pb-2 focus:border-blue-400"
-            placeholder={t('partName')}
-            value={current.part_name}
-            onChange={e => setField('part_name', e.target.value)}
-          />
+          <div>
+            <input
+              className="w-full text-xl font-bold text-gray-900 placeholder-gray-300 outline-none border-b border-gray-100 pb-2 focus:border-blue-400"
+              placeholder={t('partName')}
+              value={current.part_name}
+              onChange={e => setField('part_name', e.target.value)}
+            />
+            <p className="text-xs text-gray-400 mt-1">{t('partNameHint')}</p>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {[
               { key: 'machine' as const, label: t('machine') },

@@ -182,6 +182,7 @@
     "backToDashboard": "← 返回主頁",
     "newCard": "新增改車單",
     "partName": "零件名稱",
+    "partNameHint": "這是檔名，記得編輯方便辨識",
     "machine": "機台",
     "material": "材料",
     "programId": "程式編號",
