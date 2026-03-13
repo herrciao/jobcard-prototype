@@ -52,10 +52,16 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   const [cards, setCards] = useState<JobCard[]>([])
   const [current, setCurrent] = useState<JobCard | null>(null)
+  const [snapshot, setSnapshot] = useState<JobCard | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [dirty, setDirty] = useState(false)
   const [lightbox, setLightbox] = useState<string | null>(null)
-  const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const currentRef = useRef<JobCard | null>(null)
+  const dirtyRef = useRef(false)
+
+  currentRef.current = current
+  dirtyRef.current = dirty
 
   const fetchCards = useCallback(async () => {
     const res = await fetch('/api/jobcards')
@@ -76,6 +82,27 @@ export default function JobCardClient({ userId }: { userId: string }) {
   }, [])
 
   useEffect(() => { fetchCards() }, [fetchCards])
+
+  useEffect(() => {
+    const saveOnExit = () => {
+      if (dirtyRef.current && currentRef.current) {
+        const card = currentRef.current
+        navigator.sendBeacon(
+          `/api/jobcards/${card.id}`,
+          new Blob([JSON.stringify(card)], { type: 'application/json' })
+        )
+      }
+    }
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') saveOnExit()
+    }
+    window.addEventListener('beforeunload', saveOnExit)
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => {
+      window.removeEventListener('beforeunload', saveOnExit)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [])
 
   function formatDate(d: Date) {
     return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`
@@ -117,7 +144,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
           job_card_photos: [],
         }
         setCards([safeCard, ...cards])
-        setCurrent(safeCard)
+        openCard(safeCard)
       } else {
         const err = await res.json().catch(() => ({}))
         alert(`${t('createError') || 'Failed to create card'}: ${err.error || res.status}`)
@@ -127,10 +154,9 @@ export default function JobCardClient({ userId }: { userId: string }) {
     }
   }
 
-  function autoSave(updated: JobCard) {
+  function trackChange(updated: JobCard) {
     setCurrent(updated)
-    if (saveTimer.current) clearTimeout(saveTimer.current)
-    saveTimer.current = setTimeout(() => saveCard(updated), 1500)
+    setDirty(true)
   }
 
   async function saveCard(card: JobCard) {
@@ -141,7 +167,28 @@ export default function JobCardClient({ userId }: { userId: string }) {
       body: JSON.stringify(card),
     })
     setSaving(false)
+    setDirty(false)
     setCards(prev => prev.map(c => c.id === card.id ? { ...card, updated_at: new Date().toISOString() } : c))
+  }
+
+  function handleSaveAndBack() {
+    if (current) {
+      saveCard(current).then(() => setCurrent(null))
+    }
+  }
+
+  function handleCancel() {
+    if (snapshot) {
+      setCards(prev => prev.map(c => c.id === snapshot.id ? snapshot : c))
+    }
+    setDirty(false)
+    setCurrent(null)
+  }
+
+  function openCard(card: JobCard) {
+    setSnapshot(structuredClone(card))
+    setCurrent(card)
+    setDirty(false)
   }
 
   async function deleteCard(id: string) {
@@ -183,28 +230,28 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   function setField(key: string, value: string) {
     if (!current) return
-    autoSave({ ...current, [key]: value })
+    trackChange({ ...current, [key]: value })
   }
 
   function setSetup(key: string, value: string) {
     if (!current) return
-    autoSave({ ...current, setup_data: { ...current.setup_data, [key]: value } })
+    trackChange({ ...current, setup_data: { ...current.setup_data, [key]: value } })
   }
 
   function addTool() {
     if (!current) return
-    autoSave({ ...current, tools_data: [...current.tools_data, { number: '', holder: '', insert: '' }] })
+    trackChange({ ...current, tools_data: [...current.tools_data, { number: '', holder: '', insert: '' }] })
   }
 
   function updateTool(i: number, field: keyof Tool, value: string) {
     if (!current) return
     const tools = current.tools_data.map((t, idx) => idx === i ? { ...t, [field]: value } : t)
-    autoSave({ ...current, tools_data: tools })
+    trackChange({ ...current, tools_data: tools })
   }
 
   function deleteTool(i: number) {
     if (!current) return
-    autoSave({ ...current, tools_data: current.tools_data.filter((_, idx) => idx !== i) })
+    trackChange({ ...current, tools_data: current.tools_data.filter((_, idx) => idx !== i) })
   }
 
   const setupFields: { key: string; label: string }[] = [
@@ -230,13 +277,25 @@ export default function JobCardClient({ userId }: { userId: string }) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <button onClick={() => { if (saveTimer.current) { clearTimeout(saveTimer.current); saveCard(current); } setCurrent(null) }} className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-            ← {tc('back')}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSaveAndBack}
+              disabled={saving}
+              className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {saving ? t('saving') : tc('save')}
+            </button>
+            <button
+              onClick={handleCancel}
+              className="text-sm text-gray-500 font-medium px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              {tc('cancel')}
+            </button>
+          </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400">
-              {saving ? t('saving') : t('saved')}
-            </span>
+            {dirty && <span className="text-xs text-amber-500">{t('unsaved')}</span>}
+            {!dirty && !saving && <span className="text-xs text-gray-400">{t('saved')}</span>}
+            {saving && <span className="text-xs text-gray-400">{t('saving')}</span>}
             <button onClick={() => deleteCard(current.id)} className="text-sm text-red-500 hover:text-red-700 font-medium">
               {t('deleteCard')}
             </button>
@@ -390,7 +449,22 @@ export default function JobCardClient({ userId }: { userId: string }) {
           />
         </div>
 
-        <p className="text-center text-xs text-gray-400 pb-4">{t('autoSaved')}</p>
+        <div className="flex items-center justify-center gap-3 pb-4 pt-2">
+          <button
+            onClick={handleSaveAndBack}
+            disabled={saving}
+            className="bg-blue-600 text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {saving ? t('saving') : tc('save')}
+          </button>
+          <button
+            onClick={handleCancel}
+            className="text-sm text-gray-500 font-medium px-6 py-2.5 rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            {tc('cancel')}
+          </button>
+        </div>
+        <p className="text-center text-xs text-gray-400 pb-4">{t('autoSavedOnExit')}</p>
 
         {lightbox && (
           <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
@@ -428,7 +502,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
           {cards.map(card => (
             <button
               key={card.id}
-              onClick={() => setCurrent(card)}
+              onClick={() => openCard(card)}
               className="w-full bg-white rounded-2xl border border-gray-200 p-4 text-left hover:border-blue-300 hover:shadow-sm transition-all"
             >
               <div className="flex items-start justify-between">

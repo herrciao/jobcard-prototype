@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { resolveUserId } from '@/lib/resolve-user'
+import { resolveWorkspace } from '@/lib/resolve-workspace'
 import { NextResponse } from 'next/server'
 
 const MAX_PHOTOS_PER_CARD = 5
@@ -16,7 +16,25 @@ export async function POST(
 
   const { id } = await params
   const db = supabaseAdmin()
-  const { userId: uid } = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  const { workspace } = await resolveWorkspace(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+
+  if (!workspace.permissions.canEdit) {
+    return NextResponse.json(
+      { error: 'forbidden', message: 'You do not have permission to edit job cards' },
+      { status: 403 }
+    )
+  }
+
+  const { data: card } = await db
+    .from('job_cards')
+    .select('id')
+    .eq('id', id)
+    .eq('user_id', workspace.workspaceOwnerId)
+    .single()
+
+  if (!card) {
+    return NextResponse.json({ error: 'Card not found' }, { status: 404 })
+  }
 
   const { count } = await db
     .from('job_card_photos')
@@ -35,7 +53,7 @@ export async function POST(
     .from('job_card_photos')
     .insert({
       job_card_id: id,
-      user_id: uid,
+      user_id: workspace.actorId,
       url: body.url,
       public_id: body.public_id,
     })
@@ -67,14 +85,31 @@ export async function DELETE(
   }
 
   const db = supabaseAdmin()
-  const { userId: uid } = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+  const { workspace } = await resolveWorkspace(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+
+  if (!workspace.permissions.canDelete && !workspace.isOwner) {
+    return NextResponse.json(
+      { error: 'forbidden', message: 'You do not have permission to delete photos' },
+      { status: 403 }
+    )
+  }
+
+  const { data: card } = await db
+    .from('job_cards')
+    .select('id')
+    .eq('id', id)
+    .eq('user_id', workspace.workspaceOwnerId)
+    .single()
+
+  if (!card) {
+    return NextResponse.json({ error: 'Card not found' }, { status: 404 })
+  }
 
   const { error } = await db
     .from('job_card_photos')
     .delete()
     .eq('id', photoId)
     .eq('job_card_id', id)
-    .eq('user_id', uid)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

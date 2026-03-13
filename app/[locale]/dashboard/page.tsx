@@ -4,8 +4,11 @@ import { hasActiveSubscription } from '@/lib/subscription'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
+import { resolveWorkspace } from '@/lib/resolve-workspace'
 import UpgradeBanner from './UpgradeBanner'
 import SignOutButton from '@/components/SignOutButton'
+import InvitationBanner from '@/components/InvitationBanner'
+import WorkspaceBanner from '@/components/WorkspaceBanner'
 
 export default async function DashboardPage({
   searchParams,
@@ -22,10 +25,12 @@ export default async function DashboardPage({
   const tc = await getTranslations('common')
 
   const db = supabaseAdmin()
+  const { workspace } = await resolveWorkspace(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+
   const { count: cardCount } = await db
     .from('job_cards')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', session.user.id)
+    .eq('user_id', workspace.workspaceOwnerId)
 
   const isAdmin = session.user.email === 'info@elixirfab.com'
 
@@ -59,6 +64,9 @@ export default async function DashboardPage({
             </div>
           </div>
         )}
+
+        <InvitationBanner />
+        <WorkspaceBanner />
 
         {!isPro && <UpgradeBanner />}
 
@@ -114,6 +122,24 @@ export default async function DashboardPage({
               <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </Link>
+
+          {/* Team Management - only for owners (not members of another team) */}
+          {workspace.isOwner && (
+            <Link
+              href="/dashboard/team"
+              className="group bg-white rounded-2xl border border-gray-200 p-6 hover:border-teal-300 hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-teal-100 transition-colors">
+                👥
+              </div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-1">{t('team')}</h2>
+              <p className="text-gray-500 text-sm leading-relaxed">{t('teamDesc')}</p>
+              <div className="mt-4 flex items-center text-teal-700 text-sm font-medium">
+                {t('openTeam')}
+                <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+          )}
         </div>
 
         {isPro && (

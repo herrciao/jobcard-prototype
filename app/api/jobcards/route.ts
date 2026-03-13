@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { resolveUserId } from '@/lib/resolve-user'
+import { resolveWorkspace } from '@/lib/resolve-workspace'
 import { NextResponse } from 'next/server'
 
 const MAX_JOB_CARDS = 10
@@ -12,20 +12,23 @@ export async function GET() {
   }
 
   const db = supabaseAdmin()
-  const profile = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
-  const uid = profile.userId
+  const { ok, workspace, error: wsError } = await resolveWorkspace(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+
+  if (!ok) {
+    return NextResponse.json({ error: wsError }, { status: 500 })
+  }
 
   const { data: cards, error } = await db
     .from('job_cards')
     .select('*, job_card_photos(id, url, public_id, created_at)')
-    .eq('user_id', uid)
+    .eq('user_id', workspace.workspaceOwnerId)
     .order('updated_at', { ascending: false })
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ cards })
+  return NextResponse.json({ cards, workspace: { isOwner: workspace.isOwner, permissions: workspace.permissions } })
 }
 
 export async function POST(req: Request) {
@@ -35,19 +38,23 @@ export async function POST(req: Request) {
   }
 
   const db = supabaseAdmin()
-  const profileResult = await resolveUserId(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
-  if (!profileResult.ok) {
+  const { ok, workspace, error: wsError } = await resolveWorkspace(db, session.user.id, session.user.email || '', session.user.name, session.user.image)
+
+  if (!ok) {
+    return NextResponse.json({ error: wsError }, { status: 500 })
+  }
+
+  if (!workspace.permissions.canCreate) {
     return NextResponse.json(
-      { error: `Profile error: ${profileResult.error}` },
-      { status: 500 }
+      { error: 'forbidden', message: 'You do not have permission to create job cards' },
+      { status: 403 }
     )
   }
-  const uid = profileResult.userId
 
   const { count } = await db
     .from('job_cards')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', uid)
+    .eq('user_id', workspace.workspaceOwnerId)
 
   if ((count ?? 0) >= MAX_JOB_CARDS) {
     return NextResponse.json(
@@ -60,7 +67,7 @@ export async function POST(req: Request) {
   const { data: card, error } = await db
     .from('job_cards')
     .insert({
-      user_id: uid,
+      user_id: workspace.workspaceOwnerId,
       module_type: body.module_type || 'lathe',
       part_name: body.part_name || '',
       machine: body.machine || '',
