@@ -53,6 +53,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
   const [cards, setCards] = useState<JobCard[]>([])
   const [current, setCurrent] = useState<JobCard | null>(null)
   const [snapshot, setSnapshot] = useState<JobCard | null>(null)
+  const [isNewCard, setIsNewCard] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [dirty, setDirty] = useState(false)
@@ -144,7 +145,10 @@ export default function JobCardClient({ userId }: { userId: string }) {
           job_card_photos: [],
         }
         setCards([safeCard, ...cards])
-        openCard(safeCard)
+        setSnapshot(structuredClone(safeCard))
+        setCurrent(safeCard)
+        setDirty(false)
+        setIsNewCard(true)
       } else {
         const err = await res.json().catch(() => ({}))
         alert(`${t('createError') || 'Failed to create card'}: ${err.error || res.status}`)
@@ -173,15 +177,22 @@ export default function JobCardClient({ userId }: { userId: string }) {
 
   function handleSaveAndBack() {
     if (current) {
-      saveCard(current).then(() => setCurrent(null))
+      saveCard(current).then(() => {
+        setIsNewCard(false)
+        setCurrent(null)
+      })
     }
   }
 
-  function handleCancel() {
-    if (snapshot) {
+  async function handleCancel() {
+    if (isNewCard && current) {
+      await fetch(`/api/jobcards/${current.id}`, { method: 'DELETE' })
+      setCards(prev => prev.filter(c => c.id !== current.id))
+    } else if (snapshot) {
       setCards(prev => prev.map(c => c.id === snapshot.id ? snapshot : c))
     }
     setDirty(false)
+    setIsNewCard(false)
     setCurrent(null)
   }
 
@@ -189,6 +200,7 @@ export default function JobCardClient({ userId }: { userId: string }) {
     setSnapshot(structuredClone(card))
     setCurrent(card)
     setDirty(false)
+    setIsNewCard(false)
   }
 
   async function deleteCard(id: string) {
